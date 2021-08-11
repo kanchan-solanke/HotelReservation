@@ -1,67 +1,124 @@
-import java.util.ArrayList;
+import java.util.*;
+public class Hotel {
+    private HashMap<String, List<Integer>> lakeWood = new HashMap<>();
+    private HashMap<String, List<Integer>> bridgeWood = new HashMap<>();
+    private HashMap<String, List<Integer>> ridgeWood = new HashMap<>();
+    private static int lakeWoodRating;
+    private static int bridgeWoodRating;
+    private static int rigdeWoodRating;
 
-class Hotel {
-    String hotelName;
-    double rates;
-    int rating;
-
-
-    public Hotel(String hotelName, double rates, int rating) {
-        this.hotelName = hotelName;
-        this.rates = rates;
-        this.rating = rating;
+    public Hotel() {
+        setLakeWood();
+        setBridgeWood();
+        setRidgeWood();
     }
 
-    public Hotel(String hotelName, double rates) {
-        this.hotelName = hotelName;
-        this.rates = rates;
+    private void setLakeWood() {
+        List<Integer> lakeWoodRewards = new ArrayList<>();
+        lakeWoodRewards.add(80);
+        lakeWoodRewards.add(80);
+
+        List<Integer> lakeWoodRegular = new ArrayList<>();
+        lakeWoodRegular.add(110);
+        lakeWoodRegular.add(90);
+
+        lakeWood.put("Rewards", lakeWoodRewards);
+        lakeWood.put("Regular", lakeWoodRegular);
+        lakeWoodRating = 3;
     }
 
-    public double getRate() {
-        return rates;
+    private void setBridgeWood() {
+        List<Integer> bridgeWoodRewards = new ArrayList<>();
+        bridgeWoodRewards.add(110);
+        bridgeWoodRewards.add(50);
+
+        List<Integer> bridgeWoodRegular = new ArrayList<>();
+        bridgeWoodRegular.add(160);
+        bridgeWoodRegular.add(60);
+
+        bridgeWood.put("Rewards", bridgeWoodRewards);
+        bridgeWood.put("Regular", bridgeWoodRegular);
+        bridgeWoodRating = 4;
     }
 
-    public String getName() {
-        return hotelName;
+    private void setRidgeWood() {
+        List<Integer> ridgeWoodRewards = new ArrayList<>();
+        ridgeWoodRewards.add(100);
+        ridgeWoodRewards.add(40);
+
+        List<Integer> ridgeWoodRegular = new ArrayList<>();
+        ridgeWoodRegular.add(220);
+        ridgeWoodRegular.add(150);
+
+        ridgeWood.put("Rewards", ridgeWoodRewards);
+        ridgeWood.put("Regular", ridgeWoodRegular);
+        rigdeWoodRating = 5;
     }
 
-    @Override
-    public String toString() {
-        String str = "Hotel name : " + this.hotelName + " rates for regular customer : " + this.rates;
-        return str;
-    }
-
-}
-
-class HotelReservation {
-    static ArrayList<Hotel> hotelList = new ArrayList<Hotel>();
-
-    public boolean addHotel(String hotelName, int rates, int rating) {
-        Hotel hotel = new Hotel(hotelName, rates, rating);
-        hotelList.add(hotel);
-        System.out.println(hotelList.isEmpty());
-        if (hotelList.isEmpty()) {
-            return false;
-        } else {
-            return true;
+    public String minCostHotel(String input) {
+        // Regular: 16Mar2009(mon), 17Mar2009(tue), 18Mar2009(wed)
+        String[] arr = input.split(",");
+        String customerType = "";
+        if (arr.length > 0) {
+            String tempArr[] = arr[0].split(":");
+            customerType = tempArr[0];
+            arr[0] = tempArr[1];
         }
-    }
-
-    static Hotel addHotel(String name, Double rates) {
-        Hotel hotel = new Hotel(name, rates);
-        hotelList.add(hotel);
-
+        String hotel = minCostHotel(customerType, arr);
         return hotel;
     }
 
+    private String minCostHotel(String customerType, String[] arr) {
+        int numOfWeekdays = 0;
+        int numOfWeekends = 0;
+        int lakeWoodCost = 0;
+        int bridgeWoodCost = 0;
+        int ridgeWoodCost = 0;
+        for (int i = 0; i < arr.length; i++) {
+            String day = arr[i];
+            System.out.println(day);
+            if (day.contains("mon") || day.contains("tue") || day.contains("wed") || day.contains("thu")
+                    || day.contains("fri")) {
+                numOfWeekdays++;
+            } else {
+                numOfWeekends++;
+            }
+        }
+        List<Integer> valuesForLakewood = lakeWood.get(customerType); // 0 - weekday, 1- weekend
+        List<Integer> valuesForBridgeWood = bridgeWood.get(customerType);
+        List<Integer> valuesForRidgeWood = ridgeWood.get(customerType);
+        lakeWoodCost = numOfWeekdays * valuesForLakewood.get(0) + numOfWeekends * valuesForLakewood.get(1);
+        bridgeWoodCost = numOfWeekdays * valuesForBridgeWood.get(0) + numOfWeekends * valuesForBridgeWood.get(1);
+        ridgeWoodCost = numOfWeekdays * valuesForRidgeWood.get(0) + numOfWeekends * valuesForRidgeWood.get(1);
+        String hotel = minCost(lakeWoodCost, bridgeWoodCost, ridgeWoodCost);
+        System.out.println(lakeWoodCost + " " + bridgeWoodCost + " " + ridgeWoodCost);
+        return hotel;
+    }
+
+    private String minCost(int lakeWoodCost, int bridgeWoodCost, int ridgeWoodCost) {
+        int minCost = Math.min(lakeWoodCost, Math.min(bridgeWoodCost, ridgeWoodCost));
+        if (minCost == lakeWoodCost && minCost == bridgeWoodCost) {
+            return bridgeWoodRating > lakeWoodRating ? "BridgeWood" : "LakeWood";
+        } else if (minCost == bridgeWoodCost && minCost == ridgeWoodCost) {
+            return bridgeWoodRating > ridgeWoodCost ? "BridgeWood" : "RidgeWood";
+        } else if (minCost == lakeWoodCost && minCost == ridgeWoodCost) {
+            return lakeWoodCost > ridgeWoodCost ? "LakeWood" : "RidgeWood";
+        } else {
+            if (minCost == lakeWoodCost) {
+                return "LakeWood";
+            } else if (minCost == bridgeWoodCost) {
+                return "BridgeWood";
+            } else {
+                return "RidgeWood";
+            }
+        }
+    }
 
     public static void main(String[] args) {
-        ArrayList<Hotel> hotelArrayList = new ArrayList<>();
-
-        hotelArrayList.add(addHotel("Lakewood", 110.0));
-        hotelArrayList.add(addHotel("Bridgewood", 160.0));
-        hotelArrayList.add(addHotel("Ridgewood", 220.0));
-
-        System.out.println(hotelArrayList);
+        String input = "Rewards: 10Sept2020, 11Sept2020"; 
+        Hotel hotelRoom = new Hotel();
+        String hotel = hotelRoom.minCostHotel(input);
+        System.out.println(hotel);
     }
+
 }
