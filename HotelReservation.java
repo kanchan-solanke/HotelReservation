@@ -1,4 +1,6 @@
+import java.util.HashMap;
 import java.util.*;
+
 public class Hotel {
     private HashMap<String, List<Integer>> lakeWood = new HashMap<>();
     private HashMap<String, List<Integer>> bridgeWood = new HashMap<>();
@@ -56,7 +58,6 @@ public class Hotel {
     }
 
     public String minCostHotel(String input) {
-        // Regular: 16Mar2009(mon), 17Mar2009(tue), 18Mar2009(wed)
         String[] arr = input.split(",");
         String customerType = "";
         if (arr.length > 0) {
@@ -115,7 +116,7 @@ public class Hotel {
     }
 
     public static void main(String[] args) {
-        String input = "Rewards: 10Sept2020, 11Sept2020"; 
+        String input = "Rewards: 10Sept2020, 11Sept2020";
         Hotel hotelRoom = new Hotel();
         String hotel = hotelRoom.minCostHotel(input);
         System.out.println(hotel);
