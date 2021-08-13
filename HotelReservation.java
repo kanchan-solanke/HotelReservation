@@ -52,9 +52,9 @@ class Main {
         Scanner scan2 = new Scanner(System.in);
 
         hotelsList.add(new Hotel(1, "Lakewood", 3, 110, 90));
-        hotelsList.add(new Hotel(2, "Bridgewood", 3, 900, 90));
+        hotelsList.add(new Hotel(2, "Bridgewood", 4, 150, 50));
 
-        hotelsList.add(new Hotel(3, "ridgewood", 3, 300, 90));
+        hotelsList.add(new Hotel(3, "ridgewood", 5, 220, 150));
 
 
         System.out.println("\n----Menu---" +
@@ -118,6 +118,21 @@ class Main {
                     break;
 
                 case 3:
+                    System.out.println("----------- Add Rating to each Hotel ----------\n");
+                    System.out.println("Id \t" + "Name\t" + "Rating\t");
+                    hotelsList.stream()
+                            .forEach(hotel -> System.out.println(hotel.id + "\t" +
+                                    hotel.name + "\t" +
+                                    hotel.rating + "\t"));
+                    System.out.println("----------------------------------------------------------\n");
+                    System.out.println("\n----Menu---" +
+                            "\n1: AddHotel" +
+                            "\n2: ShowHotels" +
+                            "\n3: AddRatings" +
+                            "\n4: ShowCheapestHotel" +
+                            "\nPress 0 to QUIT!..");
+                    System.out.println("Enter your choice => ");
+                    choice = scan2.nextInt();
                     break;
 
                 case 4:
